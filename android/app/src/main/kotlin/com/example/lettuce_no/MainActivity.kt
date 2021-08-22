@@ -1,4 +1,4 @@
-package com.example.lettuce_no
+package com.nushirvan.lettuceno
 
 import io.flutter.embedding.android.FlutterActivity
 

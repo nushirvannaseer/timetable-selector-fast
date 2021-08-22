@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "325437342919",
+    "firebase_url": "https://lettuce-no-default-rtdb.firebaseio.com",
+    "project_id": "lettuce-no",
+    "storage_bucket": "lettuce-no.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:325437342919:android:69d09f44c27b3ba69aeae2",
+        "android_client_info": {
+          "package_name": "com.nushirvan.lettuceno"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "325437342919-srb2iqqss58sanhddjmnn8ae8aajcjot.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7AHNtzEZ6wIJxTbAXZMNlReBvRRDM3s0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "325437342919-srb2iqqss58sanhddjmnn8ae8aajcjot.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
