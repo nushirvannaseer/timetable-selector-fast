@@ -45,55 +45,59 @@ class DisplayTimetable extends StatelessWidget {
     // Map<String, Map<String, List<Course>>> newTable =
     generateSelectedTimetable();
     return Scaffold(
-      body: Center(
-        child: Container(
-            child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Center(
-                child: Container(
-                  width: width * 0.4,
-                  child: ElevatedButton(
-                      style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Colors.indigo)),
-                      onPressed: () async {
-                        print("Save clicked");
-                        await saveTimeTable(context);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [Text("Save Timetable"), Icon(Icons.save)],
-                      )),
-                ),
+      appBar: AppBar(title: Text("Timetable View") ),
+      body: Container(
+          child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Center(
+              child: Container(
+                width: width * 0.4,
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.green[700])),
+                    onPressed: () async {
+                      print("Save clicked");
+                      await saveTimeTable(context);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [Text("Save Timetable"), Icon(Icons.save)],
+                    )),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: generateSelectedTimetable().map((c) {
-                  if (c.runtimeType == String) {
-                    return Container(
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: generateSelectedTimetable().map((c) {
+                if (c.runtimeType == String) {
+                  return Center(
+                    child: Container(
+                      margin: EdgeInsets.all(2),
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),
                         color: Colors.indigo),
-                        height: height * 0.10,
+                        height: height * 0.05,
+                        width: width * 0.5,
                         child: Center(
                             child: Text(
                           c,
                           textScaleFactor: 1.8,
                           
-                        )));
-                  } else {
-                    return Container(
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-
-                        height: height * 0.12,
-                        child: Center(child: Text(c.printCourse(), textAlign: TextAlign.center)));
-                  }
-                }).toList(),
-              ),
-            ],
-          ),
-        )),
-      ),
+                        ))),
+                  );
+                } else {
+                  return Container(
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.black26),
+                      margin: EdgeInsets.fromLTRB(width*0.05, height*0.005, width*0.05, 0),
+                      padding: EdgeInsets.all(width*0.05),
+                      height: height * 0.12,
+                      child: Center(child: Text(c.printCourse(), textAlign: TextAlign.center)));
+                }
+              }).toList(),
+            ),
+          ],
+        ),
+      )),
     );
   }
 
@@ -108,7 +112,7 @@ class DisplayTimetable extends StatelessWidget {
           .toList();
     }
     var tempTimings = List.from(timings);
-    tempTimings.removeAt(0);
+   // tempTimings.removeAt(0);
     Map<String, Map<String, List<Course>>> newTable = {};
     for (String key in generatedTable.keys) {
       Map<String, List<Course>> timeMap = {};

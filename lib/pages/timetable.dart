@@ -95,9 +95,12 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
                         children: selectedCourses.map(
                           (e) {
                             return Container(
+                              margin: EdgeInsets.all(1),
+                              color: Colors.indigo,
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(e),
+                                  Text(e,),
                                   IconButton(
                                     icon: Icon(Icons.delete),
                                     onPressed: () {

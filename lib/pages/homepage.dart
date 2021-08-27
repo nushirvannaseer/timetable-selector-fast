@@ -1,30 +1,23 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lettuce_no/models/society.dart';
-import 'package:lettuce_no/models/student.dart';
 import 'package:lettuce_no/pages/displaycreatedtimetable.dart';
-import 'package:lettuce_no/pages/societies.dart';
-import 'package:lettuce_no/pages/societyhomepage.dart';
 import 'package:lettuce_no/pages/timetable.dart';
 import 'package:lettuce_no/pages/viewfreerooms.dart';
 import 'package:lettuce_no/router/router.dart';
 import 'package:lettuce_no/utils/timetableparser.dart';
 import 'package:path_provider/path_provider.dart';
 
-class StudentHomePage extends StatefulWidget {
-  StudentHomePage({Key? key, required this.student}) : super(key: key);
-  Student student;
+class HomePage extends StatefulWidget {
+  HomePage({Key? key}) : super(key: key);
+  //Student student;
 
   @override
-  _StudentHomePageState createState() => _StudentHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _StudentHomePageState extends State<StudentHomePage> {
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     WidgetsFlutterBinding.ensureInitialized();
@@ -36,33 +29,38 @@ class _StudentHomePageState extends State<StudentHomePage> {
     return Scaffold(
       appBar: AppBar(title: Text("Timetable Manager")),
       //drawer: Drawer(),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        //crossAxisCount: 3,
-        children: [
-          // GridButton("View Societies", Societies()),
-          // GridButton("View Departments", null),
-          GridButton("Create a Timetable", TimeTableViewer(), context),
-          GridButton(
-            "My Timetable",
-            null,
-            context,
-            preProcessing: () async {
-              var tables = await getSavedTimetable();
-              return DisplayTimetable(
-                  selectedCourses: tables[0], completeTimetable: tables[1]);
-            },
+      body: Center(
+        child: Container(
+          height: MediaQuery.of(context).size.height*0.6,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            //crossAxisCount: 3,
+            children: [
+              // GridButton("View Societies", Societies()),
+              // GridButton("View Departments", null),
+              GridButton("Create a Timetable", TimeTableViewer(), context),
+              GridButton(
+                "My Timetable",
+                null,
+                context,
+                preProcessing: () async {
+                  var tables = await getSavedTimetable();
+                  return DisplayTimetable(
+                      selectedCourses: tables[0], completeTimetable: tables[1]);
+                },
+              ),
+              GridButton(
+                "Free Rooms",
+                null,
+                context,
+                preProcessing: () async {
+                  var table = await getSavedTimetable();
+                  return ViewFreeRooms(completeTimetable: table[1]);
+                },
+              ),
+            ],
           ),
-          GridButton(
-            "Free Rooms",
-            null,
-            context,
-            preProcessing: () async {
-              var table = await getSavedTimetable();
-              return ViewFreeRooms(completeTimetable: table[1]);
-            },
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -77,7 +75,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
             Navigator.push(context, router(context, buttonRoute));
         },
         child: Container(
-          margin: EdgeInsets.all(25),
+          margin: EdgeInsets.all(10),
           height: MediaQuery.of(context).size.height*0.1,
             color: Colors.indigo, child: Center(child: Text(buttonText))));
   }

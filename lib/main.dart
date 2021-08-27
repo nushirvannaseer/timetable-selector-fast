@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lettuce_no/models/society.dart';
 import 'package:lettuce_no/models/student.dart';
 import 'package:lettuce_no/pages/societyhomepage.dart';
-import 'package:lettuce_no/pages/studenthomepage.dart';
+import 'package:lettuce_no/pages/homepage.dart';
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
 
@@ -38,11 +38,9 @@ class _MyAppState extends State<MyApp> {
           //);
           return  MaterialApp(
             title: 'Lettuce No',
-            theme: ThemeData.dark(),
+            theme: ThemeData.light(),
             debugShowCheckedModeBanner: false,
-            home: StudentHomePage(
-                student:
-                    Student("Nushirvan Naseer", "18L-1233", "123456", 7, "CS")),
+            home: HomePage(),
             // routes: {
             //   '/societyhomepage': (context)=> SocietyHomePage(society:Society("NUCES ACM", "nuces.acm", "123456") ),
             // },
@@ -52,12 +50,10 @@ class _MyAppState extends State<MyApp> {
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
           return MaterialApp(
-            title: 'Lettuce No',
+            title: 'Timetable Manager',
             theme: ThemeData.dark(),
             debugShowCheckedModeBanner: false,
-            home: StudentHomePage(
-                student:
-                    Student("Nushirvan Naseer", "18L-1233", "123456", 7, "CS")),
+            home:HomePage(),
             // routes: {
             //   '/societyhomepage': (context)=> SocietyHomePage(society:Society("NUCES ACM", "nuces.acm", "123456") ),
             // },
