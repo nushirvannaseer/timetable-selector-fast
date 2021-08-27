@@ -39,7 +39,7 @@ class DisplayTimetable extends StatelessWidget {
     // WidgetsFlutterBinding.ensureInitialized();
     // SystemChrome.setPreferredOrientations(
     //     [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+   // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     // Map<String, Map<String, List<Course>>> newTable =

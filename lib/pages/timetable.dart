@@ -61,31 +61,36 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
             body: Center(
               child: Column(
                 children: [
-                  Expanded(
-                    flex: 1,
-                    child: DropdownButton<String>(
-                      hint: Text("Click to select a course"),
-                      value: null,
-                      icon: const Icon(Icons.add),
-                      iconSize: 24,
-                      elevation: 16,
-                      style: const TextStyle(color: Colors.white),
-                      underline: Container(
-                        height: 2,
-                        color: Colors.white,
+                  Container(
+                    
+                  //  width: MediaQuery.of(context).size.width*0.8,
+                    child: Expanded(
+                      flex: 1,
+                      child: DropdownButton<String>(
+                        
+                        hint: Text("Click to select a course"),
+                        value: null,
+                        icon: const Icon(Icons.add),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: const TextStyle(color: Colors.white),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.white,
+                        ),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedCourses.add(newValue!);
+                          });
+                        },
+                        items:
+                            courses.map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
                       ),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectedCourses.add(newValue!);
-                        });
-                      },
-                      items:
-                          courses.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
                     ),
                   ),
                   Expanded(
@@ -95,6 +100,7 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
                         children: selectedCourses.map(
                           (e) {
                             return Container(
+                              width: MediaQuery.of(context).size.width*0.95,
                               margin: EdgeInsets.all(1),
                               color: Colors.indigo,
                               child: Row(
