@@ -63,8 +63,8 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
                 children: [
                   Container(
                     
-                   width: MediaQuery.of(context).size.width*0.98,
-                    child: Expanded(
+                   
+                    child: Flexible(
                       flex:1,
                       child: DropdownButton<String>(
                        isExpanded: true,
