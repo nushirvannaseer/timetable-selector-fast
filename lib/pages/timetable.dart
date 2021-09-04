@@ -52,8 +52,8 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     // print(x.toString());
-    return timetableLoaded == true
-        ? Scaffold(
+    if (timetableLoaded == true) {
+      return Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
               title: Text("Choose Timetable"),
@@ -62,75 +62,146 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
               child: Column(
                 children: [
                   Container(
-                    
-                   
-                    child: Flexible(
-                      flex:1,
-                      child: DropdownButton<String>(
-                       isExpanded: true,
-                        hint: Text("Click to select a course", textAlign:TextAlign.center),
-                        
-                        value: null,
-                        icon: const Icon(Icons.add),
-                        iconSize: 21,
-                        elevation: 16,
-                        style: const TextStyle(color: Colors.white),
-                        underline: Container(
-                          width: MediaQuery.of(context).size.width*0.5,
-                          height: 2,
-                          color: Colors.white
-                        ),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedCourses.add(newValue!);
-                          });
-                        },
-                        items:
-                            courses.map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
-                    ),
+                    margin: EdgeInsets.all(
+                        MediaQuery.of(context).size.height * 0.01),
+                    child: Center(
+                        child: Text(
+                      selectedCourses.length > 0
+                          ? "Selected Courses"
+                          : "Tap On a Course to Select It",
+                      textScaleFactor: selectedCourses.length > 0 ? 1.4 : 1.2,
+                    )),
                   ),
-                  Expanded(
-                    flex: 10,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: selectedCourses.map(
-                          (e) {
-                            return Container(
-                              width: MediaQuery.of(context).size.width*0.95,
-                              margin: EdgeInsets.all(1),
-                              color: Colors.indigo,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(e,),
-                                  IconButton(
-                                    icon: Icon(Icons.delete),
-                                    onPressed: () {
-                                      setState(() {
-                                        selectedCourses.remove(e);
-                                      });
+
+                  //   child: Flexible(
+                  //     flex:1,
+                  //     child: DropdownButton<String>(
+                  //      isExpanded: true,
+                  //       hint: Text("Click to select a course", textAlign:TextAlign.center),
+
+                  //       value: null,
+                  //       icon: const Icon(Icons.add),
+                  //       iconSize: 21,
+                  //       elevation: 16,
+                  //       style: const TextStyle(color: Colors.white),
+                  //       underline: Container(
+                  //         width: MediaQuery.of(context).size.width*0.5,
+                  //         height: 2,
+                  //         color: Colors.white
+                  //       ),
+                  //       onChanged: (String? newValue) {
+                  //         setState(() {
+                  //           selectedCourses.add(newValue!);
+                  //         });
+                  //       },
+                  //       items:
+                  //           courses.map<DropdownMenuItem<String>>((String value) {
+                  //         return DropdownMenuItem<String>(
+                  //           value: value,
+                  //           child: Text(value),
+                  //         );
+                  //       }).toList(),
+                  //     ),
+                  //   ),
+                  // ),
+                  selectedCourses.length > 0
+                      ? Expanded(
+                          flex:  selectedCourses.length==1?1:selectedCourses.length==2?2:3 ,
+                          child: Container(
+                            padding: EdgeInsets.all(MediaQuery.of(context).size.height * 0.01),
+                            color: Colors.black26,
+                            child: SingleChildScrollView(
+                              child: Center(
+                                child: Wrap(
+                                  children: selectedCourses.map(
+                                    (e) {
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          color: Colors.indigo,
+                                        ),
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.95,
+                                        margin: EdgeInsets.all(1),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Flexible(
+                                              child: Text(
+                                                e,
+                                                textScaleFactor: 1,
+                                                softWrap: true,
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                            IconButton(
+                                            
+                                              icon: Icon(Icons.delete),
+                                              onPressed: () {
+                                                setState(() {
+                                                  selectedCourses.remove(e);
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      );
                                     },
-                                  ),
-                                ],
+                                  ).toList(),
+                                ),
                               ),
-                            );
-                          },
-                        ).toList(),
-                      ),
-                    ),
+                            ),
+                          ),
+                        )
+                      : Container(),
+                  Container(
+                    margin: EdgeInsets.all(
+                        MediaQuery.of(context).size.height * 0.01),
+                    child: Center(
+                        child: Text(
+                      "List of Courses",
+                      textScaleFactor: 1.4,
+                    )),
+                  ),
+                  Flexible(
+                    flex: 6,
+                    child: SingleChildScrollView(
+                        child: Column(
+                      children: courses
+                          .map((e) => Container(
+                              height: MediaQuery.of(context).size.height * 0.08,
+                              margin: EdgeInsets.all(
+                                  MediaQuery.of(context).size.height * 0.003),
+                              color: selectedCourses.contains(e)
+                                  ? Colors.green[700]
+                                  : Colors.black26,
+                              child: InkWell(
+                                  onTap: () => {
+                                        if (selectedCourses.contains(e))
+                                          {
+                                            this.setState(() {
+                                              selectedCourses.remove(e);
+                                            })
+                                          }
+                                        else
+                                          this.setState(() {
+                                            selectedCourses.add(e);
+                                          })
+                                      },
+                                  child: Center(child: Text(e)))))
+                          .toList(),
+                    )),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton(
-                         style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Colors.indigo)),
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.indigo)),
                         onPressed: () {
                           if (selectedCourses.length > 0) {
                             print("Selected courses $selectedCourses");
@@ -144,7 +215,7 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
                                     )));
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              backgroundColor:Colors.yellow,
+                              backgroundColor: Colors.yellow,
                               content: Text("Please Select At Least 1 Course!"),
                             ));
                           }
@@ -153,8 +224,9 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
                       ),
                       inProgress == false
                           ? ElevatedButton(
-                             style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Colors.indigo)),
+                              style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all(Colors.indigo)),
                               onPressed: () async {
                                 this.setState(() {
                                   inProgress = true;
@@ -163,17 +235,19 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
                                 if (filePath == "") {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                         backgroundColor:Colors.red,
+                                          backgroundColor: Colors.red,
                                           content: Text(
-                                           
-                                              "Error downloading timetable. Please check your internet connection.", style: TextStyle(color: Colors.white))));
+                                              "Error downloading timetable. Please check your internet connection.",
+                                              style: TextStyle(
+                                                  color: Colors.white))));
                                 } else {
                                   createCompleteTimeTableFromScratch();
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        backgroundColor:Colors.green,
-                                          content: Text(
-                                              "Updated Successfully!", style: TextStyle(color: Colors.white))));
+                                          backgroundColor: Colors.green,
+                                          content: Text("Updated Successfully!",
+                                              style: TextStyle(
+                                                  color: Colors.white))));
                                 }
                                 this.setState(() {
                                   inProgress = false;
@@ -193,13 +267,15 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
                 ],
               ),
             ),
-          )
-        : Scaffold(
+          );
+    } else {
+      return Scaffold(
             body: Center(
               child: inProgress == false
                   ? ElevatedButton(
-                     style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Colors.indigo)),
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.indigo)),
                       onPressed: () async {
                         this.setState(() {
                           inProgress = true;
@@ -224,6 +300,7 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
                   : CircularProgressIndicator(),
             ),
           );
+    }
   }
 
   Future<bool> checkFileExists(String fileName) async {

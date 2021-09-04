@@ -71,24 +71,29 @@ class _HomePageState extends State<HomePage> {
   }
 
   GridButton(buttonText, buttonRoute, context, {preProcessing}) {
-    return InkWell(
-        onTap: () async {
-          if (preProcessing != null) {
-            buttonRoute = await preProcessing();
-          }
-          if (buttonRoute != null)
-            Navigator.push(context, router(context, buttonRoute));
-          else
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              backgroundColor: Colors.red,
-              content: Text("No Saved Timetable!", style: TextStyle(color: Colors.white),),
-            ));
-        },
-        child: Container(
-            margin: EdgeInsets.all(10),
+    return 
+        Container(
+          margin: EdgeInsets.all(10),
             height: MediaQuery.of(context).size.height * 0.1,
+            
+          child:Material(
             color: Colors.indigo,
-            child: Center(child: Text(buttonText))));
+            child: InkWell(
+                  onTap: () async {
+            if (preProcessing != null) {
+              buttonRoute = await preProcessing();
+            }
+            if (buttonRoute != null)
+              Navigator.push(context, router(context, buttonRoute));
+            else
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: Colors.red,
+                content: Text("No Saved Timetable!", style: TextStyle(color: Colors.white),),
+              ));
+                  },
+              
+              child: Center(child: Text(buttonText))),
+          ));
   }
 
   getSavedTimetable() async {
