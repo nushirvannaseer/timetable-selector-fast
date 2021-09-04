@@ -18,20 +18,21 @@ class DisplayTimetable extends StatelessWidget {
   Map<String, dynamic> completeTimetable;
 
   final List<String> timings = [
-    "8:00-9:20",
-    "9:30-10:50",
-    "11:00-12:20",
-    "12:30-1:50",
-    "2:00-3:20",
-    "3:30-4:50",
-    "5:00-6:20"
+    "8:30-9:50",
+    "10:00-11:20",
+    "11:30-12:50",
+    "1:00-2:20",
+    "2:30-3:50",
+    "4:00-5:20",
+    "5:30-6:50",
   ];
   final List<String> days = [
     "Monday",
     "Tuesday",
     "Wednesday",
     "Thursday",
-    "Friday"
+    "Friday",
+    "Saturday",
   ];
 
   @override

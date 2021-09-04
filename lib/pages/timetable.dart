@@ -63,20 +63,22 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
                 children: [
                   Container(
                     
-                  //  width: MediaQuery.of(context).size.width*0.8,
+                   width: MediaQuery.of(context).size.width*0.98,
                     child: Expanded(
-                      flex: 1,
+                      flex:1,
                       child: DropdownButton<String>(
+                       isExpanded: true,
+                        hint: Text("Click to select a course", textAlign:TextAlign.center),
                         
-                        hint: Text("Click to select a course"),
                         value: null,
                         icon: const Icon(Icons.add),
-                        iconSize: 24,
+                        iconSize: 21,
                         elevation: 16,
                         style: const TextStyle(color: Colors.white),
                         underline: Container(
+                          width: MediaQuery.of(context).size.width*0.5,
                           height: 2,
-                          color: Colors.white,
+                          color: Colors.white
                         ),
                         onChanged: (String? newValue) {
                           setState(() {
@@ -104,7 +106,7 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
                               margin: EdgeInsets.all(1),
                               color: Colors.indigo,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Text(e,),
                                   IconButton(

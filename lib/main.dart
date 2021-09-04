@@ -61,7 +61,7 @@ class _MyAppState extends State<MyApp> {
         }
 
         // Otherwise, show something whilst waiting for initialization to complete
-        return Scaffold(body: Container(child: Center(child: CircularProgressIndicator())));
+        return MaterialApp(home: Scaffold(body: Container(color: Colors.grey, child: Center(child: CircularProgressIndicator()))));
       },
     );
   }

@@ -60,8 +60,9 @@ timetableParser(Excel table) {
     "Wednesday": [],
     "Thursday": [],
     "Friday": [],
+    "Saturday":[],
   };
-  var t = table.tables.keys.toList()[1];
+  var t = table.tables.keys.toList()[0];
   print("COlumns:${table.tables[t]!.maxCols}");
   print("Rows: ${table.tables[t]!.maxRows}");
   int i = 0;
@@ -71,7 +72,7 @@ timetableParser(Excel table) {
   String day = "";
   for (List<dynamic> row in table.tables[t]!.rows) {
     //print(row[15].backgroundColorHex)
-    int time = 20;
+    int time = 60;
     int prevTime = -1;
     //finding out the current day
 

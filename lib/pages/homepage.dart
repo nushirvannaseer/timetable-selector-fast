@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
       //drawer: Drawer(),
       body: Center(
         child: Container(
-          height: MediaQuery.of(context).size.height*0.6,
+          height: MediaQuery.of(context).size.height * 0.6,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             //crossAxisCount: 3,
@@ -45,8 +45,11 @@ class _HomePageState extends State<HomePage> {
                 context,
                 preProcessing: () async {
                   var tables = await getSavedTimetable();
-                  return DisplayTimetable(
-                      selectedCourses: tables[0], completeTimetable: tables[1]);
+                  return tables != null
+                      ? DisplayTimetable(
+                          selectedCourses: tables[0],
+                          completeTimetable: tables[1])
+                      : null;
                 },
               ),
               GridButton(
@@ -55,7 +58,9 @@ class _HomePageState extends State<HomePage> {
                 context,
                 preProcessing: () async {
                   var table = await getSavedTimetable();
-                  return ViewFreeRooms(completeTimetable: table[1]);
+                  return table != null
+                      ? ViewFreeRooms(completeTimetable: table[1])
+                      : null;
                 },
               ),
             ],
@@ -65,7 +70,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  GridButton(buttonText, buttonRoute, context,{preProcessing }) {
+  GridButton(buttonText, buttonRoute, context, {preProcessing}) {
     return InkWell(
         onTap: () async {
           if (preProcessing != null) {
@@ -73,11 +78,17 @@ class _HomePageState extends State<HomePage> {
           }
           if (buttonRoute != null)
             Navigator.push(context, router(context, buttonRoute));
+          else
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              backgroundColor: Colors.red,
+              content: Text("No Saved Timetable!", style: TextStyle(color: Colors.white),),
+            ));
         },
         child: Container(
-          margin: EdgeInsets.all(10),
-          height: MediaQuery.of(context).size.height*0.1,
-            color: Colors.indigo, child: Center(child: Text(buttonText))));
+            margin: EdgeInsets.all(10),
+            height: MediaQuery.of(context).size.height * 0.1,
+            color: Colors.indigo,
+            child: Center(child: Text(buttonText))));
   }
 
   getSavedTimetable() async {
