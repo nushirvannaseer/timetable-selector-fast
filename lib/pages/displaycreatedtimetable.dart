@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:lettuce_no/utils/checkplatform.dart';
 import 'package:lettuce_no/utils/timetableparser.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -51,9 +52,9 @@ class DisplayTimetable extends StatelessWidget {
           child: SingleChildScrollView(
         child: Column(
           children: [
-            Center(
+            !PlatformInfo().isWeb()?Center(
               child: Container(
-                width: width * 0.4,
+                width: !PlatformInfo().isWeb()? width * 0.4: width*0.1,
                 child: ElevatedButton(
                     style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(Colors.green[700])),
@@ -66,7 +67,7 @@ class DisplayTimetable extends StatelessWidget {
                       children: [Text("Save Timetable"), Icon(Icons.save)],
                     )),
               ),
-            ),
+            ):Container(),
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,7 +79,7 @@ class DisplayTimetable extends StatelessWidget {
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),
                         color: Colors.indigo),
                         height: height * 0.05,
-                        width: width * 0.5,
+                        width: !PlatformInfo().isWeb()? width * 0.5: width*0.3,
                         child: Center(
                             child: Text(
                           c,
@@ -87,12 +88,13 @@ class DisplayTimetable extends StatelessWidget {
                         ))),
                   );
                 } else {
+                  String printable=c.printCourse();
                   return Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.black26),
-                      margin: EdgeInsets.fromLTRB(width*0.05, height*0.005, width*0.05, 0),
-                      padding: EdgeInsets.all(width*0.05),
-                      height: height * 0.12,
-                      child: Center(child: Text(c.printCourse(), textAlign: TextAlign.center)));
+                      // decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+                      // margin: EdgeInsets.fromLTRB(width*0.05, height*0.005, width*0.05, 0),
+                      // padding: EdgeInsets.all(width*0.05),
+                      height: height * 0.05,
+                      child: Center(child: Text(printable)));
                 }
               }).toList(),
             ),

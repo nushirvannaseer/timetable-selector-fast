@@ -1,13 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lettuce_no/pages/displaycreatedtimetable.dart';
 import 'package:lettuce_no/pages/timetable.dart';
 import 'package:lettuce_no/pages/viewfreerooms.dart';
 import 'package:lettuce_no/router/router.dart';
+import 'package:lettuce_no/utils/checkplatform.dart';
 import 'package:lettuce_no/utils/timetableparser.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:lettuce_no/utils/checkplatform.dart';
+
+var GLOBAL_TABLE;
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -18,6 +23,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var text = "";
   @override
   Widget build(BuildContext context) {
     WidgetsFlutterBinding.ensureInitialized();
@@ -27,73 +33,79 @@ class _HomePageState extends State<HomePage> {
 
   Scaffold MainScaffold(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Timetable Manager")),
-      //drawer: Drawer(),
-      body: Center(
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.6,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            //crossAxisCount: 3,
-            children: [
-              // GridButton("View Societies", Societies()),
-              // GridButton("View Departments", null),
-              GridButton("Create a Timetable", TimeTableViewer(), context),
-              GridButton(
-                "My Timetable",
-                null,
-                context,
-                preProcessing: () async {
-                  var tables = await getSavedTimetable();
-                  return tables != null
-                      ? DisplayTimetable(
-                          selectedCourses: tables[0],
-                          completeTimetable: tables[1])
-                      : null;
-                },
-              ),
-              GridButton(
-                "Free Rooms",
-                null,
-                context,
-                preProcessing: () async {
-                  var table = await getSavedTimetable();
-                  return table != null
-                      ? ViewFreeRooms(completeTimetable: table[1])
-                      : null;
-                },
-              ),
-            ],
+        appBar: AppBar(title: Text("Timetable Manager")),
+        //drawer: Drawer(),
+        body: Center(
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              //crossAxisCount: 3,
+              children: [
+                // GridButton("View Societies", Societies()),
+                // GridButton("View Departments", null),
+                GridButton("Create a Timetable", TimeTableViewer(), context),
+                !PlatformInfo().isWeb()
+                    ? GridButton(
+                        "My Timetable",
+                        null,
+                        context,
+                        preProcessing: () async {
+                          var tables = await getSavedTimetable();
+                          return tables != null
+                              ? DisplayTimetable(
+                                  selectedCourses: tables[0],
+                                  completeTimetable: tables[1])
+                              : null;
+                        },
+                      )
+                    : Container(),
+                !PlatformInfo().isWeb()
+                    ? GridButton(
+                        "Free Rooms",
+                        null,
+                        context,
+                        preProcessing: () async {
+                          var table = await getSavedTimetable();
+                          return table != null
+                              ? ViewFreeRooms(completeTimetable: table[1])
+                              : null;
+                        },
+                      )
+                    : Container(),
+              ],
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   GridButton(buttonText, buttonRoute, context, {preProcessing}) {
-    return 
-        Container(
-          margin: EdgeInsets.all(10),
-            height: MediaQuery.of(context).size.height * 0.1,
-            
-          child:Material(
-            color: Colors.indigo,
-            child: InkWell(
-                  onTap: () async {
-            if (preProcessing != null) {
-              buttonRoute = await preProcessing();
-            }
-            if (buttonRoute != null)
-              Navigator.push(context, router(context, buttonRoute));
-            else
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                backgroundColor: Colors.red,
-                content: Text("No Saved Timetable!", style: TextStyle(color: Colors.white),),
-              ));
-                  },
-              
+    return Container(
+        width: PlatformInfo().isWeb()
+            ? MediaQuery.of(context).size.width * 0.5
+            : MediaQuery.of(context).size.width,
+        margin: EdgeInsets.all(10),
+        height: MediaQuery.of(context).size.height * 0.1,
+        child: Material(
+          color: Colors.indigo,
+          child: InkWell(
+              onTap: () async {
+                if (preProcessing != null) {
+                  buttonRoute = await preProcessing();
+                }
+                if (buttonRoute != null)
+                  Navigator.push(context, router(context, buttonRoute));
+                else
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content: Text(
+                      "No Saved Timetable!",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ));
+              },
               child: Center(child: Text(buttonText))),
-          ));
+        ));
   }
 
   getSavedTimetable() async {
