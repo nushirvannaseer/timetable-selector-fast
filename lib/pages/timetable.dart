@@ -398,7 +398,7 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
     var table;
     if (PlatformInfo().isWeb()) {
       // if (GLOBAL_TABLE == null) {
-      ByteData data = await rootBundle.load('/tables-web/timetable.xlsx');
+      ByteData data = await rootBundle.load('assets/tables-web/timetable.xlsx');
       final buffer = data.buffer;
 
       //var bytes = File(file).readAsBytesSync();
