@@ -46,14 +46,18 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
   @override
   void initState() {
     super.initState();
-    userCredential = userCredential();
+    if (!PlatformInfo().isWeb()) {
+      userCredential = userCredential();
+    }
     loadTimeTable();
   }
 
   @override
   Widget build(BuildContext context) {
-    WidgetsFlutterBinding.ensureInitialized();
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    if (!PlatformInfo().isWeb()) {
+      WidgetsFlutterBinding.ensureInitialized();
+      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    }
     // print(x.toString());
     if (timetableLoaded == true) {
       return Scaffold(
@@ -180,7 +184,9 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
               Flexible(
                 flex: 1,
                 child: Row(
-                  mainAxisAlignment:!PlatformInfo().isWeb()? MainAxisAlignment.spaceEvenly: MainAxisAlignment.center,
+                  mainAxisAlignment: !PlatformInfo().isWeb()
+                      ? MainAxisAlignment.spaceEvenly
+                      : MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
                       style: ButtonStyle(
@@ -207,44 +213,49 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
                       },
                       child: Text("Generate Table"),
                     ),
-                   !PlatformInfo().isWeb()? inProgress == false
-                        ? ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all(Colors.indigo)),
-                            onPressed: () async {
-                              this.setState(() {
-                                inProgress = true;
-                              });
-                              String filePath = await downloadTimeTable();
-                              if (filePath == "") {
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                    backgroundColor: Colors.red,
-                                    content: Text(
-                                        "Error downloading timetable. Please check your internet connection.",
-                                        style: TextStyle(color: Colors.white))));
-                              } else {
-                                createCompleteTimeTableFromScratch();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        backgroundColor: Colors.green,
-                                        content: Text("Updated Successfully!",
-                                            style:
-                                                TextStyle(color: Colors.white))));
-                              }
-                              this.setState(() {
-                                inProgress = false;
-                              });
-                            }
-                            // } else {
-                            //   ScaffoldMessenger.of(context)
-                            //       .showSnackBar(SnackBar(
-                            //     content: Text("No internet!"),
-                            //   ));
-                            // }
-                            ,
-                            child: Text("Update Table"))
-                        : CircularProgressIndicator():Container(),
+                    !PlatformInfo().isWeb()
+                        ? inProgress == false
+                            ? ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Colors.indigo)),
+                                onPressed: () async {
+                                  this.setState(() {
+                                    inProgress = true;
+                                  });
+                                  String filePath = await downloadTimeTable();
+                                  if (filePath == "") {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            backgroundColor: Colors.red,
+                                            content: Text(
+                                                "Error downloading timetable. Please check your internet connection.",
+                                                style: TextStyle(
+                                                    color: Colors.white))));
+                                  } else {
+                                    createCompleteTimeTableFromScratch();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            backgroundColor: Colors.green,
+                                            content: Text(
+                                                "Updated Successfully!",
+                                                style: TextStyle(
+                                                    color: Colors.white))));
+                                  }
+                                  this.setState(() {
+                                    inProgress = false;
+                                  });
+                                }
+                                // } else {
+                                //   ScaffoldMessenger.of(context)
+                                //       .showSnackBar(SnackBar(
+                                //     content: Text("No internet!"),
+                                //   ));
+                                // }
+                                ,
+                                child: Text("Update Table"))
+                            : CircularProgressIndicator()
+                        : Container(),
                   ],
                 ),
               ),
@@ -256,34 +267,32 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
       return Scaffold(
         body: Center(
           child: inProgress == false
-              ? PlatformInfo().isWeb()
-                  ? CircularProgressIndicator()
-                  : ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.indigo)),
-                      onPressed: () async {
-                        this.setState(() {
-                          inProgress = true;
-                        });
-                        String filePath = await downloadTimeTable();
-                        if (filePath == "") {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(
-                                  "Error downloading timetable. Please check your internet connection.")));
-                          this.setState(() {
-                            inProgress = false;
-                          });
-                        } else {
-                          createCompleteTimeTableFromScratch();
-                          this.setState(() {
-                            inProgress = false;
-                          });
-                        }
-                      },
-                      child: Text("Download TimeTable from Server"),
-                    )
-              : CircularProgressIndicator(),
+              ? CircularProgressIndicator()
+              : ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.indigo)),
+                  onPressed: () async {
+                    this.setState(() {
+                      inProgress = true;
+                    });
+                    String filePath = await downloadTimeTable();
+                    if (filePath == "") {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              "Error downloading timetable. Please check your internet connection.")));
+                      this.setState(() {
+                        inProgress = false;
+                      });
+                    } else {
+                      createCompleteTimeTableFromScratch();
+                      this.setState(() {
+                        inProgress = false;
+                      });
+                    }
+                  },
+                  child: Text("Download TimeTable from Server"),
+                ),
         ),
       );
     }
@@ -397,20 +406,24 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
   createCompleteTimeTableFromScratch() async {
     var table;
     if (PlatformInfo().isWeb()) {
-      // if (GLOBAL_TABLE == null) {
-      ByteData data = await rootBundle.load('assets/tables-web/timetable.xlsx');
-      final buffer = data.buffer;
+      if (GLOBAL_TABLE == null) {
+        ByteData data =
+            await rootBundle.load('assets/tables-web/timetable.xlsx');
+        final buffer = data.buffer;
 
-      //var bytes = File(file).readAsBytesSync();
-      table = Excel.decodeBytes(
-          buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
-      // GLOBAL_TABLE = table;
-      // } else
+        var bytes = buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+        table = Excel.decodeBytes(bytes);
+        // GLOBAL_TABLE = table;
+        print("bytes decoded");
+      }
       //   table = GLOBAL_TABLE;
+
     } else {
       String file = await getAppDirectoryPath() + "/timetable.xlsx";
       var bytes = File(file).readAsBytesSync();
       table = Excel.decodeBytes(bytes);
+      final filename = 'file.txt';
+      await File(filename).writeAsString('some content');
     }
     if (PlatformInfo().isWeb() && GLOBAL_TABLE == null) {
       var x = timetableParser(table);
@@ -436,7 +449,7 @@ class _TimeTableViewerState extends State<TimeTableViewer> {
       timetable = timetable;
       timetableLoaded = true;
     });
-    if (PlatformInfo().isAppOS()) {
+    if (!PlatformInfo().isWeb()) {
       String storedTable =
           await getAppDirectoryPath() + "/completeTimetable.txt";
       File(storedTable).writeAsStringSync(jsonEncode(timetable).toString());
